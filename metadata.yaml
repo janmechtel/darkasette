@@ -4,14 +4,85 @@ plugins:
       title: Dashboard
       description: Showing Key Metrics
       layout:
-        - [events-count]
+        - [services-count, events-count]
+        - [analysis-note, services-titles]
       charts:
         events-count:
           title: Total number of events
           db: darkwebreports
-          query: SELECT count(*) as count FROM pings
+          query: >-
+            SELECT count(*) as count 
+            FROM pings
           library: metric
           display:
             field: count
             prefix:
             suffix:
+        services-count:
+          title: Total number of services
+          db: darkwebreports
+          query: >-
+            SELECT count(DISTINCT HiddenService) as count 
+            FROM pings
+          library: metric
+          display:
+            field: count
+            prefix:
+            suffix:
+        analysis-note:
+          library: markdown
+          display: |-
+            # Analysis notes
+            > A [datasette](https://datasette.io/) exploration of the [Hunchly Dark Web Reports](https://www.hunch.ly/darkweb-osint/)
+        services-titles:
+          title: Word cloud of services titles
+          db: darkwebreports
+          query: >-
+            SELECT
+              b.value AS word,
+              COUNT(*) AS frequency
+            FROM (
+                SELECT '["' || replace(replace(lower(replace(trim(replace(Title,'"','')), ' ', '", "')), CHAR(9), ''), CHAR(10), '') || '"]' AS array
+                FROM (
+                  SELECT DISTINCT Title
+                  FROM pings
+                ) 
+                WHERE Title is not null
+                AND json_valid('["' || replace(replace(lower(replace(trim(replace(Title,'"','')), ' ', '", "')), CHAR(9), ''), CHAR(10), '') || '"]') = 1
+              ) a,
+              json_each(a.array) b
+            WHERE length(b.value) > 3
+            GROUP BY b.value
+            ORDER BY frequency DESC
+            LIMIT 100
+          library: vega
+          display:
+            height: 150
+            scales:
+              - name: color
+                type: ordinal
+                domain: { data: table, field: word }
+                range: ["#d5a928", "#652c90", "#939597"]
+            marks:
+              - type: text
+                from: { data: table }
+                encode:
+                  enter:
+                    text: { field: word }
+                    align: { value: center }
+                    baseline: { value: alphabetic }
+                    fill: { scale: color, field: "word" }
+                  update:
+                    fillOpacity: { value: 1 }
+                  hover:
+                    fillOpacity: { value: 0.5 }
+                transform:
+                  - type: wordcloud
+                    size: [{ signal: width }, { signal: height }]
+                    text: { field: word }
+                    rotate: 0
+                    font: Helvetica Neue, Arial
+                    fontSize: { field: datum.frequency }
+                    fontWeight: "300"
+                    fontSizeRange: [12, 56]
+                    padding: 2
