@@ -6,7 +6,7 @@ plugins:
       layout:
         - [services-count, events-count]
         - [analysis-note, services-titles]
-        - [analysis-note,latest-services]
+        - [latest-services, latest-services-down]
       charts:
         events-count:
           title: Total number of events
@@ -88,7 +88,7 @@ plugins:
                     fontSizeRange: [12, 56]
                     padding: 2
                     latest-offers:
-        latest-services:
+        latest-services-up:
           title: Latest services
           db: darkwebreports
           query: >-
@@ -99,6 +99,21 @@ plugins:
             WHERE TRUE
               AND FirstSeen IS NOT NULL
             ORDER BY FirstSeen DESC
+            LIMIT 5
+          library: table
+          display:
+        latest-services-down:
+          title: Latest disappearing services
+          db: darkwebreports
+          query: >-
+            SELECT
+              LastUp,
+              HiddenService
+            FROM pings
+            WHERE TRUE
+              AND LastUp IS NOT NULL
+              AND LastUp != "Never"
+            ORDER BY LASTUP DESC
             LIMIT 5
           library: table
           display:
