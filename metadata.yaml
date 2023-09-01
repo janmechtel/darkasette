@@ -1,0 +1,17 @@
+plugins:
+  datasette-dashboards:
+    my-dashboard:
+      title: Dashboard
+      description: Showing Key Metrics
+      layout:
+        - [events-count]
+      charts:
+        events-count:
+          title: Total number of events
+          db: darkwebreports
+          query: SELECT count(*) as count FROM pings
+          library: metric
+          display:
+            field: count
+            prefix:
+            suffix:
