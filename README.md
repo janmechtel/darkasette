@@ -18,5 +18,5 @@ If you do discover child pornography please report it to the National Center for
 
 
 # Requirements
-- `pip install datasette, sqlite3, pandas, openpyxl`
+- `pip install datasette, sqlite3, pandas, openpyxl, sqlite-utils`
 - `datasette install datasette-dashboards`
