@@ -1,8 +1,8 @@
 plugins:
   datasette-dashboards:
     my-dashboard:
-      title: Dashboard
-      description: Showing Key Metrics
+      title: Darkasette Dashboard
+      description: A dashboard of the dark web.
       layout:
         - [analysis-note, analysis-note]
         - [services-count, events-count]
