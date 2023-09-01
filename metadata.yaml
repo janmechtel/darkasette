@@ -6,6 +6,7 @@ plugins:
       layout:
         - [services-count, events-count]
         - [analysis-note, services-titles]
+        - [analysis-note,latest-services]
       charts:
         events-count:
           title: Total number of events
@@ -86,3 +87,18 @@ plugins:
                     fontWeight: "300"
                     fontSizeRange: [12, 56]
                     padding: 2
+                    latest-offers:
+        latest-services:
+          title: Latest services
+          db: darkwebreports
+          query: >-
+            SELECT
+              FirstSeen,
+              title as Title
+            FROM pings
+            WHERE TRUE
+              AND FirstSeen IS NOT NULL
+            ORDER BY FirstSeen DESC
+            LIMIT 5
+          library: table
+          display:
