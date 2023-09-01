@@ -4,9 +4,11 @@ plugins:
       title: Dashboard
       description: Showing Key Metrics
       layout:
+        - [analysis-note, analysis-note]
         - [services-count, events-count]
-        - [analysis-note, services-titles]
+        - [languages, services-titles]
         - [latest-services, latest-services-down]
+
       charts:
         events-count:
           title: Total number of events
@@ -117,3 +119,27 @@ plugins:
             LIMIT 5
           library: table
           display:
+        languages:
+          title: Number of services by language
+          db: darkwebreports
+          query: >-
+            SELECT
+              Language as language,
+              count(DISTINCT HiddenService) as count
+            FROM pings
+            WHERE TRUE
+            GROUP BY Language
+            ORDER BY count DESC
+          library: vega-lite
+          display:
+            mark: { type: arc, tooltip: true }
+            params:
+              - name: highlight
+                select: { fields: [language], type: point, "on": mouseover }
+                bind: legend
+            encoding:
+              color: { field: language, type: nominal }
+              theta: { field: count, type: quantitative }
+              opacity:
+                condition: { param: highlight, value: 1 }
+                value: 0.2
