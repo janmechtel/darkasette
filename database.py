@@ -4,10 +4,6 @@ import sqlite3
 
 def create_connection():
     """ create a database connection to a SQLite database """
-    # #delete the file if it exists
-    # import os
-    # if os.path.exists("darkwebreports.db"):
-    #     os.remove("darkwebreports.db")
     conn = None
     try:
         conn = sqlite3.connect('darkwebreports.db')
@@ -23,3 +19,16 @@ def close_connection(conn):
         conn.commit()
         conn.close()
         print("The SQLite connection is closed")
+
+def generateCreateTableQuery(tablename, columns):
+    query = 'CREATE TABLE IF NOT EXISTS "' + tablename + '" ('
+    for column in columns:
+        query += '\n"' + column[0] + '" ' + column[1] + ','
+    query = query[:-1] + ');'
+    print(query)
+    return query
+
+def drop_table(tablename, conn):
+    query = 'DROP TABLE IF EXISTS "' + tablename + '";'
+    conn.execute(query)
+    print("Table " + tablename + " dropped")
