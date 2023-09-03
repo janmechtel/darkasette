@@ -7,7 +7,7 @@ plugins:
         - [analysis-note, analysis-note]
         - [services-count, events-count]
         - [languages, services-titles]
-        - [latest-services, latest-services-down]
+        - [latest-services-up, latest-services-down]
 
       charts:
         events-count:
@@ -60,7 +60,6 @@ plugins:
             LIMIT 100
           library: vega
           display:
-            height: 150
             scales:
               - name: color
                 type: ordinal
@@ -89,19 +88,20 @@ plugins:
                     fontWeight: "300"
                     fontSizeRange: [12, 56]
                     padding: 2
-                    latest-offers:
         latest-services-up:
           title: Latest services
           db: darkwebreports
           query: >-
             SELECT
-              FirstSeen,
-              title as Title
-            FROM pings
+              title,
+              LastContactedDate,
+              LastContactedTime,
+              HiddenService
+            FROM pings 
             WHERE TRUE
-              AND FirstSeen IS NOT NULL
-            ORDER BY FirstSeen DESC
-            LIMIT 5
+              AND Sheetname = "New Today"
+              AND Title is not null
+            ORDER BY LastContactedDate, LastContactedTime DESC LIMIT 5
           library: table
           display:
         latest-services-down:
@@ -109,14 +109,11 @@ plugins:
           db: darkwebreports
           query: >-
             SELECT
-              LastUp,
+              LastUpDate,
               HiddenService
-            FROM pings
-            WHERE TRUE
-              AND LastUp IS NOT NULL
-              AND LastUp != "Never"
-            ORDER BY LASTUP DESC
-            LIMIT 5
+            FROM pings WHERE TRUE
+              AND LastUpDate IS NOT NULL
+            ORDER BY LastUpDate DESC LIMIT 5
           library: table
           display:
         languages:

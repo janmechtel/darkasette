@@ -13,7 +13,7 @@ If you do discover child pornography please report it to the National Center for
     1. Either download individual reports - or -
     1. Click "Download Archive" and extract all files from the .zip file 
 1. Run all cells in the `import.ipynb` notebook
-1. Run `datasette serve darkasette.db --metadata metadata.yaml` to start the server
+1. Run `datasette --reload darkasette.db --metadata metadata.yaml --setting sql_time_limit_ms 360000` to start the server
 1. Browse to the server at for example at http://127.0.0.1:8001/
 
 
