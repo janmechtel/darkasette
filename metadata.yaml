@@ -4,15 +4,15 @@ plugins:
       title: Darkasette Dashboard
       description: A dashboard of the dark web.
       layout:
-        - [analysis-note, analysis-note]
-        - [services-count, events-count]
+        - [analysis-note, services-count]
+        - [analysis-note, events-count]
         - [languages, services-titles]
         - [latest-services-up, latest-services-down]
 
       charts:
         events-count:
           title: Total number of events
-          db: darkwebreports
+          db: darkasette
           query: >-
             SELECT count(*) as count 
             FROM pings
@@ -23,7 +23,7 @@ plugins:
             suffix:
         services-count:
           title: Total number of services
-          db: darkwebreports
+          db: darkasette
           query: >-
             SELECT count(DISTINCT HiddenService) as count 
             FROM pings
@@ -39,7 +39,7 @@ plugins:
             > A [datasette](https://datasette.io/) exploration of the [Hunchly Dark Web Reports](https://www.hunch.ly/darkweb-osint/)
         services-titles:
           title: Word cloud of services titles
-          db: darkwebreports
+          db: darkasette
           query: >-
             SELECT
               b.value AS word,
@@ -90,7 +90,7 @@ plugins:
                     padding: 2
         latest-services-up:
           title: Latest services
-          db: darkwebreports
+          db: darkasette
           query: >-
             SELECT
               title,
@@ -106,7 +106,7 @@ plugins:
           display:
         latest-services-down:
           title: Latest disappearing services
-          db: darkwebreports
+          db: darkasette
           query: >-
             SELECT
               LastUpDate,
@@ -118,13 +118,14 @@ plugins:
           display:
         languages:
           title: Number of services by language
-          db: darkwebreports
+          db: darkasette
           query: >-
             SELECT
               Language as language,
               count(DISTINCT HiddenService) as count
             FROM pings
             WHERE TRUE
+            AND Language is not null
             GROUP BY Language
             ORDER BY count DESC
           library: vega-lite
