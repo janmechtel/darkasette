@@ -20,3 +20,10 @@ If you do discover child pornography please report it to the National Center for
 # Requirements
 - `pip install datasette, sqlite3, pandas, openpyxl, sqlite-utils`
 - `datasette install datasette-dashboards`
+- `datasette install datasette-export-notebook`
+
+# Deployment
+- follow the instructions at https://docs.datasette.io/en/stable/publish.html
+- `gcloud config set project darkasette`
+- `gcloud config set account email@gmail.com`
+- `gcloud auth login`
