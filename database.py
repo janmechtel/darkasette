@@ -2,6 +2,10 @@
 
 import sqlite3
 
+pings_tablename = "pings"
+services_tablename = "services"
+files_tablename = "files"
+
 def create_connection():
     """ create a database connection to a SQLite database """
     conn = None
