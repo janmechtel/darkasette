@@ -23,7 +23,7 @@ If you do discover child pornography please report it to the National Center for
 - `datasette install datasette-export-notebook`
 
 # Deployment
-- follow the instructions at https://docs.datasette.io/en/stable/publish.html
 - `gcloud config set project darkasette`
 - `gcloud config set account email@gmail.com`
 - `gcloud auth login`
+- `datasette publish cloudrun darkasette.db --service=darkasette --install=datasette-vega --install=datasette-dashboard` from the instructions at https://docs.datasette.io/en/stable/publish.html
